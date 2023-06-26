@@ -1,20 +1,16 @@
 package ru.netology.hibernate.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.netology.hibernate.entity.Person;
+import ru.netology.hibernate.entity.PersonId;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class PersonRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public List<Person> getPersonsByCity(String city) {
-        return entityManager.createQuery("SELECT p FROM Person p where lower(p.cityOfLiving) = lower(?1)", Person.class)
-                .setParameter(1, city)
-                .getResultList();
-    }
+public interface PersonRepository extends JpaRepository<Person, PersonId> {
+    List<Person> findByCityOfLiving(String city);
+    List<Person> findByIdAgeLessThanOrderByIdAge(int age);
+    Optional<Person> findByIdNameAndIdSurname(String name, String surname);
 }
